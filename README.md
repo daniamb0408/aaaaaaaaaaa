@@ -2,21 +2,13 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local player = Players.LocalPlayer
-local backpack = player:WaitForChild("Backpack")
 local playerGui = player:WaitForChild("PlayerGui")
 
-local oldGui = playerGui:FindFirstChild("DupeTestGUI")
-if oldGui then oldGui:Destroy() end
-
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "DupeTestGUI"
-screenGui.ResetOnSpawn = false
-screenGui.IgnoreGuiInset = true
+screenGui.Name = "GrowAGardenDupe"
 screenGui.Parent = playerGui
 
 local button = Instance.new("TextButton")
-button.Name = "DupeButton"
-button.Text = "🔁 DUPLICAR"
 button.Size = UDim2.new(0, 160, 0, 50)
 button.Position = UDim2.new(0.5, -80, 1, -60)
 button.AnchorPoint = Vector2.new(0.5, 1)
@@ -24,34 +16,17 @@ button.BackgroundColor3 = Color3.fromRGB(30, 180, 30)
 button.TextColor3 = Color3.new(1, 1, 1)
 button.Font = Enum.Font.GothamBold
 button.TextSize = 20
+button.Text = "🔁 DUPLICAR CENOURA"
 button.Parent = screenGui
 
+-- Mude "AddItemEvent" para o nome correto do evento remoto do jogo
+local addItemEvent = ReplicatedStorage:FindFirstChild("AddItemEvent")
+
 button.MouseButton1Click:Connect(function()
-    local character = player.Character
-    local toolToClone = nil
-
-    if character then
-        for _, item in ipairs(character:GetChildren()) do
-            if item:IsA("Tool") then
-                toolToClone = item
-                break
-            end
-        end
-    end
-
-    if not toolToClone then
-        toolToClone = ReplicatedStorage:FindFirstChild("ToolTemplate")
-    end
-
-    if toolToClone then
-        local clone = toolToClone:Clone()
-        clone.Parent = backpack
-        -- Opcional: desequipar para evitar conflitos
-        if character and character:FindFirstChildOfClass("Tool") then
-            character:FindFirstChildOfClass("Tool").Parent = backpack
-        end
-        print("✅ Item duplicado.")
+    if addItemEvent then
+        addItemEvent:FireServer("Carrot")  -- envia pedido para adicionar cenoura
+        print("Pedido para duplicar cenoura enviado")
     else
-        warn("❌ Nenhum Tool encontrado para duplicar.")
+        warn("Evento 'AddItemEvent' não encontrado")
     end
 end)
