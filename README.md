@@ -1,32 +1,45 @@
-local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "GrowAGardenDupe"
+ScreenGui.Parent = game.CoreGui
 
-local player = Players.LocalPlayer
-local playerGui = player:WaitForChild("PlayerGui")
+local Frame = Instance.new("Frame")
+Frame.Size = UDim2.new(0, 250, 0, 120)
+Frame.Position = UDim2.new(0.5, -125, 0.5, -60)
+Frame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+Frame.Parent = ScreenGui
 
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "GrowAGardenDupe"
-screenGui.Parent = playerGui
+local ButtonDupe = Instance.new("TextButton")
+ButtonDupe.Size = UDim2.new(0, 230, 0, 50)
+ButtonDupe.Position = UDim2.new(0, 10, 0, 30)
+ButtonDupe.BackgroundColor3 = Color3.fromRGB(80, 160, 80)
+ButtonDupe.Text = "Ativar Dupe"
+ButtonDupe.TextColor3 = Color3.new(1,1,1)
+ButtonDupe.Parent = Frame
 
-local button = Instance.new("TextButton")
-button.Size = UDim2.new(0, 160, 0, 50)
-button.Position = UDim2.new(0.5, -80, 1, -60)
-button.AnchorPoint = Vector2.new(0.5, 1)
-button.BackgroundColor3 = Color3.fromRGB(30, 180, 30)
-button.TextColor3 = Color3.new(1, 1, 1)
-button.Font = Enum.Font.GothamBold
-button.TextSize = 20
-button.Text = "🔁 DUPLICAR CENOURA"
-button.Parent = screenGui
+local TextLabel = Instance.new("TextLabel")
+TextLabel.Size = UDim2.new(0, 230, 0, 20)
+TextLabel.Position = UDim2.new(0, 10, 0, 5)
+TextLabel.BackgroundTransparency = 1
+TextLabel.Text = "Dupe Grow a Garden"
+TextLabel.TextColor3 = Color3.new(1,1,1)
+TextLabel.Parent = Frame
 
--- Mude "AddItemEvent" para o nome correto do evento remoto do jogo
-local addItemEvent = ReplicatedStorage:FindFirstChild("AddItemEvent")
+local function ativarDupe()
+    local player = game.Players.LocalPlayer
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local remote = ReplicatedStorage:FindFirstChild("RemoteEvent")
 
-button.MouseButton1Click:Connect(function()
-    if addItemEvent then
-        addItemEvent:FireServer("Carrot")  -- envia pedido para adicionar cenoura
-        print("Pedido para duplicar cenoura enviado")
-    else
-        warn("Evento 'AddItemEvent' não encontrado")
-    end
-end)
+    if not remote then return end
+
+    local args = {
+        ["action"] = "plantSeed",
+        ["seedId"] = 123,
+        ["position"] = player.Character.HumanoidRootPart.Position
+    }
+
+    remote:FireServer(args)
+    wait(0.1)
+    remote:FireServer(args)
+end
+
+ButtonDupe.MouseButton1Click:Connect(ativarDupe)
