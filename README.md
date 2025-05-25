@@ -46,6 +46,10 @@ button.MouseButton1Click:Connect(function()
     if toolToClone then
         local clone = toolToClone:Clone()
         clone.Parent = backpack
+        -- Opcional: desequipar para evitar conflitos
+        if character and character:FindFirstChildOfClass("Tool") then
+            character:FindFirstChildOfClass("Tool").Parent = backpack
+        end
         print("✅ Item duplicado.")
     else
         warn("❌ Nenhum Tool encontrado para duplicar.")
